@@ -4,7 +4,7 @@
 \alias{ggplot.connectivity}
 \title{Brain Visual}
 \usage{
-ggplot.connectivity()
+\method{ggplot}{connectivity}()
 }
 \arguments{
 \item{...}{}

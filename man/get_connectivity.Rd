@@ -4,10 +4,10 @@
 \alias{get_connectivity}
 \title{Get Brain Connectivity Measures}
 \usage{
-get_connectivity(obj, ...)
+get_connectivity(obj, ..., lags)
 }
 \arguments{
-\item{...}{}
+\item{lags}{the number of lags to try}
 }
 \description{
 Provides measures of connectivity between brain regions from a `xxxx` object.

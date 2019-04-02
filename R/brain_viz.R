@@ -12,3 +12,4 @@ ggplot.connectivity <- function(){
 
 
 ## Same arguments as ggplot but have it give the brain image for the background with specified brain regions
+## Maybe use ggforce?
