@@ -9,6 +9,8 @@ get_connectivity(data, group = NULL, covariates = NULL, ...)
 \arguments{
 \item{data}{object from a nested tibble returned from `import_nirs()`}
 
+\item{group}{the group variable to have interact with the regions, to answer the question of if the connectivity is different across groups}
+
 \item{covariates}{variables to include in the model in addition to the regions of interest and the random effects}
 
 \item{...}{arguments passed to `lme4::lmer()`}

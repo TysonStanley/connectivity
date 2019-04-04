@@ -1,13 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# connectivity
+# `connectivity` v0.1.0 <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
 
-The goal of connectivity is to make the importing, cleaning, and
-analyzing of NIRS data recipe based. That is, we will use a simple
+The goal of connectivity is to make the importing/cleaning, analyzing,
+and visualizing of NIRS data recipe based. That is, we will use a simple
 recipe to take our individual NIRS files and make clear, concise
-analyses with interpretable output. Our approach uses a type of
-Granger-Causality approach using linear mixed effects models.
+analyses with interpretable output. Our approach uses a
+Granger-Causality-type approach using linear mixed effects models.
 
 ## Installation
 
@@ -21,9 +21,11 @@ remotes::install_github("tysonstanley/connectivity")
 
 The receipe is as follows:
 
-1.  Import and Clean
-2.  Analyze
-3.  Visualize
+1.  Import and Clean (`import_nirs()`)
+2.  Analyze (`get_connectivity()`)
+3.  Visualize (`effectsize_viz()` or `brain_viz()`)
+
+### Step 1. Import and Clean
 
 The `import_nirs()` function depends on a files structure that looks
 something like:
@@ -54,12 +56,6 @@ what region goes with which channel from the Probe files, we use the
 import function like so:
 
 ``` r
-## Superior Temporal Gyrus (STG),
-## Inferior Parietal Lobule (made up of Supramarginal Gyrus and Angular Gyrus),
-## Inferior frontal Gyrus (IFG),
-## Supplementary Motor Association (SMA) and
-## the Motor Cortex (M1)
-
 library(connectivity)
 
 path <- "~/Box/Stuttering Writing Group/PhoneCallsControl/"
@@ -67,9 +63,18 @@ data <- import_nirs(path,
                     stg = 22, ipl = c(39, 40), ifg = c(44, 45), sma = 6, m1 = 4)
 ```
 
-The `stg = 22, ipl = c(30, 40), ...` correspond to regions (the name)
-and their number in the `*brod.csv` file. This creates a nested tibble
-called `data` that looks like this:
+where we are interested in the following regions:
+
+  - Superior Temporal Gyrus (STG),
+  - Inferior Parietal Lobule (made up of Supramarginal Gyrus and Angular
+    Gyrus),
+  - Inferior frontal Gyrus (IFG),
+  - Supplementary Motor Association (SMA) and
+  - the Motor Cortex (M1).
+
+The `stg = 22, ipl = c(30, 40), ...` correspond to regions (the name of
+the region) and the number refers to the number in the `*brod.csv` file.
+This creates a nested tibble called `data` that looks like this:
 
 ``` r
 data
@@ -87,11 +92,9 @@ data
 ```
 
 The `probe_data` variable contains all the NIRS information about the
-corresponding participant. From here, we can run our connectivity
-analysis, which will run a series of linear mixed effects models. If we
-specify a group variable, the models will include a region by group
-interaction. Here, we are only going to use the “resting” task for these
-analyses.
+corresponding participant. We need to make sure that the data still have
+the “regions” attribute with the names of the regions that you are
+interested in. This information is used in the next step.
 
 ``` r
 ## Subset the data to just resting and assign to `rest`
@@ -101,6 +104,17 @@ rest$probe_data = purrr::map(rest$probe_data, ~.x %>% filter(task == "rest"))
 attr(rest, "regions")
 #> [1] "stg" "ipl" "ifg" "sma" "m1"
 ```
+
+### Step 2. Analyze
+
+From here, we can do our connectivity analyses, which will run a series
+of linear mixed effects models. If we specify a group variable, the
+models will include a region by group interaction. Here, we are only
+going to use the “resting” task for these analyses (that we created
+above). The `get_connectivity()` function runs the linear mixed models
+and provides us with a tibble where it shows us our outcome (`outcome`),
+the predictor region (`rowname`), the effect size estimate (`est`), and
+the p-value (`pvalue`).
 
 ``` r
 fits <- get_connectivity(rest, covariates = c("(1 | participant)"))
@@ -133,13 +147,14 @@ fits
 #> 25      m1     lag  3.374576e-01  0.000000e+00
 ```
 
-This `fits` object has all the estimates from the various models and
-their corresopnding p-values (based on Satterthwaite approximation to
-degrees of freedom). The `est` variable shows us the effect size for
-each variable. This effect size is the average individuals standardized
-coefficient (similar to a partial correlation). (Note that `lag` is the
-1 lag of the outcome variable and so its effect sizes will almost always
-be really big).
+In this case, this `fits` object has all the estimates from the various
+models and their corresopnding p-values (based on Satterthwaite
+approximation to degrees of freedom). The `est` variable shows us the
+effect size for each variable. This effect size is the average
+individuals standardized coefficient (similar to a partial correlation).
+(Note that `lag` is the 1 lag of the outcome variable and so its effect
+sizes will almost always be really big and is generally not of direct
+interest).
 
 We can visualize these results in two main ways:
 
@@ -164,6 +179,16 @@ brain_viz(fits)
 ```
 
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+
+To control the colors of the circles and lines, use any of the ggplot2
+scale\_color\_\* functions:
+
+``` r
+brain_viz(fits) +
+  scale_color_viridis_d()
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
 
 For this brain viz, there is a built-in list of regions with
 corresponding `x` and `y` values that fit this diagram.
@@ -203,4 +228,12 @@ regs <- tibble::tribble(
 brain_viz(fits, regs = regs)
 ```
 
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+
+## Conclusion
+
+This package is designed to import/clean, analyze, and visualize a
+specific set of data. If your data do not follow the general outline
+shown above, then this package will likely throw errors. It is still in
+heavy development. Contact <t.barrett@aggiemail.usu.edu> for questions
+or comments.

@@ -4,14 +4,16 @@
 \alias{brain_viz}
 \title{Brain Visual}
 \usage{
-brain_viz(obj, jitter_val = 0.04, side = TRUE, regs = NULL)
+brain_viz(obj, jitter_val = 0.04, image = NULL, regs = NULL)
 }
 \arguments{
 \item{obj}{from `get_connectivity()`}
 
 \item{jitter_val}{control how far away the overlapping lines are (default is .04)}
 
-\item{side}{Visualize the side angle of the brain? Default is TRUE (and currently the only option)}
+\item{image}{If NULL then the default image; otherwise the path to the figure should be supplied here}
+
+\item{regs}{Alternate locations for the regions of interest (needs to have x, y, and region as the variables)}
 }
 \description{
 Provides a `ggplot2` figure of the connections of regions of the brain.

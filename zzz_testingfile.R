@@ -12,6 +12,7 @@
 
 library(tidyverse)
 devtools::document()
+devtools::check()
 
 ## Data Import
 d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",

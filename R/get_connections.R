@@ -5,6 +5,7 @@
 #' to and from each region.
 #'
 #' @param data object from a nested tibble returned from `import_nirs()`
+#' @param group the group variable to have interact with the regions, to answer the question of if the connectivity is different across groups
 #' @param covariates variables to include in the model in addition to the regions of interest and the random effects
 #' @param ... arguments passed to `lme4::lmer()`
 #'
@@ -12,6 +13,7 @@
 #' @import purrr
 #' @import tibble
 #' @import stringr
+#' @importFrom stats formula
 #'
 #' @export
 get_connectivity <- function(data, group = NULL, covariates = NULL, ...){
