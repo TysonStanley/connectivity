@@ -170,7 +170,7 @@ Here, we quickly show both.
 effectsize_viz(fits)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="60%" />
 
 #### Brain Visualization
 
@@ -178,7 +178,7 @@ effectsize_viz(fits)
 brain_viz(fits)
 ```
 
-<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="60%" />
 
 To control the colors of the circles and lines, use any of the ggplot2
 scale\_color\_\* functions:
@@ -188,7 +188,7 @@ brain_viz(fits) +
   scale_color_viridis_d()
 ```
 
-<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="60%" />
 
 For this brain viz, there is a built-in list of regions with
 corresponding `x` and `y` values that fit this diagram.
@@ -228,7 +228,7 @@ regs <- tibble::tribble(
 brain_viz(fits, regs = regs)
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-10-1.png" width="60%" />
 
 ## Conclusion
 
