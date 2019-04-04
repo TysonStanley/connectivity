@@ -9,12 +9,11 @@
 #' @import fs
 #' @import purrr
 #' @import tibble
-#' @import rlang
+#' @importFrom zoo na.locf
 #'
 #' @export
 import_nirs <- function(path = "", ...){
 
-  keep <- rlang::quo(keep)
   path <- fs::path_tidy(path)
   regions <- list(...)
   files <- files_in_path(path)
@@ -22,15 +21,32 @@ import_nirs <- function(path = "", ...){
   data_brod <- extract_brod(files, path)
 
   ## Load all probe1 and get the averages for the ROIs
-  probe1 <- import_oxy_files(files, path, probe = 1)
-  probe2 <- import_oxy_files(files, path, probe = 2)
+  probe1 <- suppressWarnings(import_oxy_files(files, path, probe = 1))
+  probe2 <- suppressWarnings(import_oxy_files(files, path, probe = 2))
   probes <- purrr::map2(probe1, probe2, ~full_join(.x, .y, by = c("time_point", "file")))
   probes <- purrr::map2(probes, data_brod, ~get_region_means(.x, regions = regions, channels = .y))
+  ## Add task variable
+  onsets <- extract_onset(files, path)
+  probes <- purrr::map2(probes, onsets, ~{
+    d = dplyr::full_join(.x, .y, by = c("time" = "start",
+                                    "file"))
+    d$task[1] = "None"
+    d %>%
+      dplyr::mutate(task = zoo::na.locf(task))
+  })
 
   ## Return organized tibble with nested column
   ## called probe_data with all data from the probes
-  tibble::tibble(participant = files,
-                 probe_data = probes)
+  df <- tibble::tibble(participant = files,
+                       probe_data = probes)
+
+  ## Little message
+  msg <- paste0("\n\n", cli::col_green(cli::symbol$tick), " Data read in with ", length(files), " participants.")
+  message(msg)
+
+  ## Add regions as an attribute
+  attr(df, "regions") <- names(regions)
+  df
 }
 
 

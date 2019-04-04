@@ -4,11 +4,17 @@
 \alias{get_connectivity}
 \title{Get Brain Connectivity Measures}
 \usage{
-get_connectivity(obj, ..., lags)
+get_connectivity(data, group = NULL, covariates = NULL, ...)
 }
 \arguments{
-\item{lags}{the number of lags to try}
+\item{data}{object from a nested tibble returned from `import_nirs()`}
+
+\item{covariates}{variables to include in the model in addition to the regions of interest and the random effects}
+
+\item{...}{arguments passed to `lme4::lmer()`}
 }
 \description{
-Provides measures of connectivity between brain regions from a `xxxx` object.
+Provides measures of connectivity between brain regions from a nested tibble returned from `import_nirs()`. It
+fits the data to a multilevel model with a specified number of lags. It returns a tibble with effect size measures
+to and from each region.
 }

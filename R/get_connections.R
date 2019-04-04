@@ -5,21 +5,40 @@
 #' to and from each region.
 #'
 #' @param data object from a nested tibble returned from `import_nirs()`
-#' @param formula the model formula passed to `lme4::lmer()`
-#' @param regions the variable names of the regions of interest
+#' @param covariates variables to include in the model in addition to the regions of interest and the random effects
 #' @param ... arguments passed to `lme4::lmer()`
 #'
+#' @importFrom tidyr unnest
+#' @import purrr
+#' @import tibble
+#' @import stringr
+#'
 #' @export
+get_connectivity <- function(data, group = NULL, covariates = NULL, ...){
 
-get_connectivity <- function(data, formula, regions, ...){
+  regions <- attr(data, "regions")
+  forms <- all_formulas(data, group, covariates)
 
-  fit <- lme4::lmer(formula, data = d, ...)
-  jtools::summ(fit,
-               scale = TRUE,
-               digits = 4)
+  d <- data %>%
+    tidyr::unnest(.)
+
+  mods <- purrr::map(seq_along(regions), ~lme4::lmer(forms[[.x]], data = d))
+  summ <- purrr::map(mods, ~jtools::summ(.x, scale = TRUE, digits = 4))
+  outcomes <- purrr::map(seq_along(mods), ~names(summ[[.x]]$model@frame)[[1]])
+  outs <- purrr::map_df(seq_along(outcomes), ~{
+    summ[[.x]]$coeftable %>%
+      data.frame(.) %>%
+      tibble::rownames_to_column(.) %>%
+      mutate(outcome = outcomes[[.x]]) %>%
+      select(outcome, rowname, `Est.`, p) %>%
+      setNames(c("outcome", "rowname", "est", "pvalue")) %>%
+      mutate(rowname = case_when(stringr::str_detect(rowname, pattern = "lag") ~ "lag",
+                                 TRUE ~ rowname)) %>%
+      filter(rowname != "(Intercept)")
+    })
+  outs
 
 }
 
-`!!` <- rlang::`!!`
 
-## http://www.scholarpedia.org/article/Brain_connectivity to read more on this stuff
+

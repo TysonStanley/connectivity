@@ -11,10 +11,12 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-",
   out.width = "100%"
 )
+
+devtools::load_all("~/Dropbox/GitHub/Connectivity")
 ```
 # connectivity
 
-The goal of connectivity is to make the importing, cleaning, and analyzing of NIRS data recipe based. That is, piping three main functions will lead from import to analysis with minimal effort of the user.
+The goal of connectivity is to make the importing, cleaning, and analyzing of NIRS data recipe based. That is, we will use a simple recipe to take our individual NIRS files and make clear, concise analyses with interpretable output. Our approach uses a type of Granger-Causality approach using linear mixed effects models.
 
 ## Installation
 
@@ -68,47 +70,104 @@ twee("~/Box/Stuttering Writing Group/PhoneCallsStutter/", level = 2)
 ```
 ```
 -- P07
+   |__ons.txt
    |__P07_brodExtract.csv
-   |__P07_HBA_Probe1_Deoxy.csv
    |__P07_HBA_Probe1_Oxy.csv
-   |__P07_HBA_Probe1_Total.csv
-   |__P07_HBA_Probe2_Deoxy.csv
    |__P07_HBA_Probe2_Oxy.csv
-   |__P07_HBA_Probe2_Total.csv
 -- P08
+   |__ons.txt
    |__P08_brodExtract.csv
-   |__P08_HBA_Probe1_Deoxy.csv
    |__P08_HBA_Probe1_Oxy.csv
-   |__P08_HBA_Probe1_Total.csv
-   |__P08_HBA_Probe2_Deoxy.csv
    |__P08_HBA_Probe2_Oxy.csv
-   |__P08_HBA_Probe2_Total.csv
 -- P09
+   |__ons.txt
    |__P09_brodExtract.csv
-   |__P09_HBA_Probe1_Deoxy.csv
    |__P09_HBA_Probe1_Oxy.csv
-   |__P09_HBA_Probe1_Total.csv
    |__...
 ```   
 
-where each participant has its own folder with the data within that folder.
+where each participant has its own folder with the data within that folder. Other files can be within the individual folders, but the ones shown are required.
 
 In our data (not currently provided), we have 5 regions that we are interested in that are mapped out in the `*brod.csv` files. To inform on what region goes with which channel from the Probe files, we use the import function like so:
 
-```{r, message = FALSE, warning = FALSE, eval = FALSE}
+```{r, message = FALSE, warning = FALSE}
 ## Superior Temporal Gyrus (STG),
 ## Inferior Parietal Lobule (made up of Supramarginal Gyrus and Angular Gyrus),
 ## Inferior frontal Gyrus (IFG),
 ## Supplementary Motor Association (SMA) and
 ## the Motor Cortex (M1)
-path <- "~/Box/Stuttering Writing Group/PhoneCallsStutter/"
+
+library(connectivity)
+
+path <- "~/Box/Stuttering Writing Group/PhoneCallsControl/"
 data <- import_nirs(path,
-                    stg = 22, ipl = c(39, 40), ifg = c(44, 45), sma = 6, pmc = 4)
+                    stg = 22, ipl = c(39, 40), ifg = c(44, 45), sma = 6, m1 = 4)
 ```
 
 The `stg = 22, ipl = c(30, 40), ...` correspond to regions (the name) and their number in the `*brod.csv` file. This creates a nested tibble called `data` that looks like this:
 
-```{r, eval = FALSE}
+```{r}
 data
 ```
+
+The `probe_data` variable contains all the NIRS information about the corresponding participant. From here, we can run our connectivity analysis, which will run a series of linear mixed effects models. If we specify a group variable, the models will include a region by group interaction. Here, we are only going to use the "resting" task for these analyses.
+
+```{r}
+## Subset the data to just resting and assign to `rest`
+rest <- data 
+rest$probe_data = purrr::map(rest$probe_data, ~.x %>% filter(task == "rest"))
+## Make sure `rest` still contains information on the regions in the data
+attr(rest, "regions")
+```
+
+
+```{r}
+fits <- get_connectivity(rest, covariates = c("(1 | participant)"))
+fits
+```
+
+This `fits` object has all the estimates from the various models and their corresopnding p-values (based on Satterthwaite approximation to degrees of freedom). The `est` variable shows us the effect size for each variable. This effect size is the average individuals standardized coefficient (similar to a partial correlation). (Note that `lag` is the 1 lag of the outcome variable and so its effect sizes will almost always be really big).
+
+We can visualize these results in two main ways:
+
+1. Simple graphs highlighting the effect size
+2. Brain visualization where the various regions are mapped onto a diagram of a brain
+
+Here, we quickly show both.
+
+#### Effect Size Graphs
+
+```{r}
+effectsize_viz(fits)
+```
+
+
+#### Brain Visualization
+
+```{r}
+brain_viz(fits)
+```
+
+For this brain viz, there is a built-in list of regions with corresponding `x` and `y` values that fit this diagram.
+
+```{r}
+connectivity::regions
+```
+
+However, if you want to add your own, you can. You need to make sure the names you give the regions in the `import_nirs()` function matches the names in the regions and that this `regions` data frame has the names `x`, `y`, and `region`. For example, let's say we are only interested in three of these regions now. We could use the following `regs` data frame to adjust not only what is shown but where they are shown. Importantly, the values for the `x` and `y` are bound between 0 and 10 (0 being the left/bottom and 10 being right/top) and so this example is extreme.
+
+```{r}
+regs <- tibble::tribble(
+  ~x, ~y, ~region,
+   1,  1,  "stg",
+   5,  9,  "ipl",
+   9,  1,  "ifg" 
+)
+
+brain_viz(fits, regs = regs)
+```
+
+
+
+
 
