@@ -4,14 +4,17 @@
 \alias{brain_viz}
 \title{Brain Visual}
 \usage{
-brain_viz(obj, jitter_val = 0.04, image = NULL, regs = NULL)
+brain_viz(obj, jitter_val = 0.04, view = "side", image = NULL,
+  regs = NULL)
 }
 \arguments{
 \item{obj}{from `get_connectivity()`}
 
 \item{jitter_val}{control how far away the overlapping lines are (default is .04)}
 
-\item{image}{If NULL then the default image; otherwise the path to the figure should be supplied here}
+\item{view}{the view of the brain diagram (available options are "side", "top", "right", "left"). If the image argument is given a path, then that image will be used instead of the built-in ones.}
+
+\item{image}{If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here}
 
 \item{regs}{Alternate locations for the regions of interest (needs to have x, y, and region as the variables)}
 }

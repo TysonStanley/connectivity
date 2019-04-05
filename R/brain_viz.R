@@ -4,7 +4,8 @@
 #'
 #' @param obj from `get_connectivity()`
 #' @param jitter_val control how far away the overlapping lines are (default is .04)
-#' @param image If NULL then the default image; otherwise the path to the figure should be supplied here
+#' @param view the view of the brain diagram (available options are "side", "top", "right", "left"). If the image argument is given a path, then that image will be used instead of the built-in ones.
+#' @param image If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here
 #' @param regs Alternate locations for the regions of interest (needs to have x, y, and region as the variables)
 #'
 #' @import ggplot2
@@ -12,16 +13,30 @@
 #' @importFrom png readPNG
 #'
 #' @export
-brain_viz <- function(obj, jitter_val = .04, image = NULL, regs = NULL){
+brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL){
 
   if (is.null(regs)){
-    regions <- connectivity::regions
+
+    regions <-
+      switch(view,
+             side  = connectivity::regions_side,
+             top   = connectivity::regions_top,
+             right = connectivity::regions_right,
+             left  = connectivity::regions_left)
+
   } else {
     regions <- regs
   }
 
   if (is.null(image)){
-    brain <- png::readPNG("inst/brain.png")
+
+    brain <-
+      switch(view,
+             side  = png::readPNG("inst/brain_side.png"),
+             top   = png::readPNG("inst/brain_top.png"),
+             right = png::readPNG("inst/brain_rightangle.png"),
+             left  = png::readPNG("inst/brain_leftangle.png"))
+
   } else {
     brain <- png::readPNG(image)
   }

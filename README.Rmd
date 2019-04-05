@@ -165,7 +165,7 @@ brain_viz(fits) +
 For this brain viz, there is a built-in list of regions with corresponding `x` and `y` values that fit this diagram.
 
 ```{r}
-connectivity::regions
+connectivity::regions_side
 ```
 
 However, if you want to add your own, you can. You need to make sure the names you give the regions in the `import_nirs()` function matches the names in the regions and that this `regions` data frame has the names `x`, `y`, and `region`. For example, let's say we are only interested in three of these regions now. We could use the following `regs` data frame to adjust not only what is shown but where they are shown. Importantly, the values for the `x` and `y` are bound between 0 and 10 (0 being the left/bottom and 10 being right/top) and so this example is extreme.
@@ -179,6 +179,29 @@ regs <- tibble::tribble(
 )
 
 brain_viz(fits, regs = regs)
+```
+
+In addition to this side diagram (`view = "side"`), the other built-in images include a top view (`view = "top"`), an angled left side (`view = "left"`), and an angled right side (`view = "right"`).
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width=4, fig.height=5}
+d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",
+                  ldlpfc = 22, rdlpfc = 39, lmpfc = 44, rmpfc = 6, lsma = 40, rsma = 45)
+stutter <- get_connectivity(d1, covariates = c("(1 | participant)"))
+brain_viz(stutter, view = "top", jitter_val = .05)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",
+                  ldlpfc = 22, rdlpfc = c(39, 40), mpfc = c(44, 45), ifg = 6, ipl = 4)
+stutter <- get_connectivity(d1, covariates = c("(1 | participant)"))
+brain_viz(stutter, view = "left", jitter_val = .05)
+```
+
+```{r, echo = FALSE, message = FALSE, warning = FALSE}
+d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",
+                  ldlpfc = 22, rdlpfc = c(39, 40), mpfc = c(44, 45), smg = 6, ang = 4)
+stutter <- get_connectivity(d1, covariates = c("(1 | participant)"))
+brain_viz(stutter, view = "right", jitter_val = .05)
 ```
 
 

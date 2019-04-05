@@ -194,7 +194,7 @@ For this brain viz, there is a built-in list of regions with
 corresponding `x` and `y` values that fit this diagram.
 
 ``` r
-connectivity::regions
+connectivity::regions_side
 #> # A tibble: 8 x 3
 #>       x     y region
 #>   <dbl> <dbl> <chr> 
@@ -229,6 +229,16 @@ brain_viz(fits, regs = regs)
 ```
 
 <img src="man/figures/README-unnamed-chunk-10-1.png" width="60%" />
+
+In addition to this side diagram (`view = "side"`), the other built-in
+images include a top view (`view = "top"`), an angled left side (`view =
+"left"`), and an angled right side (`view = "right"`).
+
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="60%" />
+
+<img src="man/figures/README-unnamed-chunk-12-1.png" width="60%" />
+
+<img src="man/figures/README-unnamed-chunk-13-1.png" width="60%" />
 
 ## Conclusion
 
