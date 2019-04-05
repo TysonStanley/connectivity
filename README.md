@@ -156,6 +156,8 @@ individuals standardized coefficient (similar to a partial correlation).
 sizes will almost always be really big and is generally not of direct
 interest).
 
+### Step 3. Visualize
+
 We can visualize these results in two main ways:
 
 1.  Simple graphs highlighting the effect size
@@ -164,7 +166,12 @@ We can visualize these results in two main ways:
 
 Here, we quickly show both.
 
+Notably, both approaches use `ggplot2` and can be adjusted with
+`ggplot2` functions.
+
 #### Effect Size Graphs
+
+This shows the size of the effects as simple line graphs as shown below.
 
 ``` r
 effectsize_viz(fits)
@@ -173,6 +180,9 @@ effectsize_viz(fits)
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="60%" />
 
 #### Brain Visualization
+
+The brain visuals are the most flexible visualization. At its simplest,
+it shows the regions of interest on the side view of the brain.
 
 ``` r
 brain_viz(fits)
