@@ -129,5 +129,5 @@ all_formulas <- function(data, group, covariates){
 }
 
 
-
+`%>%` <- dplyr::`%>%`
 
