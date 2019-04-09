@@ -1,5 +1,13 @@
 ## Utils
 
+`%+%` <- ggplot2::`%+%`
+
+find_file <- function(file){
+  system.file(file,
+              package = "connectivity")
+}
+
+
 files_in_path <- function(path){
   split_path <- unlist(fs::path_split(path))
   folder <- split_path[length(split_path)]

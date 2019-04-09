@@ -32,10 +32,10 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
 
     brain <-
       switch(view,
-             side  = png::readPNG("inst/brain_side.png"),
-             top   = png::readPNG("inst/brain_top.png"),
-             right = png::readPNG("inst/brain_rightangle.png"),
-             left  = png::readPNG("inst/brain_leftangle.png"))
+             side  = png::readPNG(find_file("brain_side.png")),
+             top   = png::readPNG(find_file("brain_top.png")),
+             right = png::readPNG(find_file("brain_rightangle.png")),
+             left  = png::readPNG(find_file("brain_leftangle.png")))
 
   } else {
     brain <- png::readPNG(image)
@@ -108,7 +108,8 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
 
 }
 
-`%+%` <- ggplot2::`%+%`
+
+
 
 #' Effect Size Visual
 #'
