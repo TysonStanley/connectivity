@@ -82,6 +82,14 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     dplyr::select(outcome, rowname, est, pvalue, x, y, xend, yend, x_perp, y_perp, xend_perp, yend_perp,
                   sig, x_padding, y_padding)
 
+  if (all(fig_data$sig == 1)){
+    alphas <- .95
+  } else if (all(fig_data$sig == 0)){
+    alphas <- .2
+  } else {
+    alphas <- c(.2, .95)
+  }
+
   ggplot2::ggplot(fig_data, ggplot2::aes(x, y)) +
     ggplot2::annotation_custom(grid::rasterGrob(brain,
                                                 width = ggplot2::unit(1,"npc"),
@@ -102,7 +110,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ggplot2::coord_cartesian(xlim = c(0,10),
                              ylim = c(0,10)) +
     ggplot2::theme_void() +
-    ggplot2::scale_alpha_manual(values = c(.2, .95)) +
+    ggplot2::scale_alpha_manual(values = alphas) +
     ggplot2::theme(legend.position = "none") +
     ggplot2::scale_size_continuous(range = c(0.3,3))
 
