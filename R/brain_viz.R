@@ -49,9 +49,9 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                   xend = x.y,
                   yend = y.y) %>%
     dplyr::filter(rowname != "lag") %>%
-    dplyr::mutate(sig = dplyr::case_when(pvalue < .05 ~ 1,
-                                         TRUE ~ 0)) %>%
-    dplyr::mutate(sig = factor(sig)) %>%
+    dplyr::mutate(sig = dplyr::case_when(pvalue <= .05 ~ 1,
+                                         pvalue > .05 ~ 0)) %>%
+    dplyr::mutate(sig = factor(sig, levels = c(0,1))) %>%
     dplyr::mutate(x_padding = x - xend,
                   y_padding = y - yend,
                   pythag = sqrt(x_padding^2 + y_padding^2)) %>%
