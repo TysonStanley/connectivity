@@ -44,7 +44,7 @@ extract_brod <- function(files, path){
 extract_onset <- function(files, path){
   purrr::map(files, ~{
 
-    path_parts = c(path, .x, "ons.txt")
+    path_parts = c(path, .x, "onset.txt")
     data = readr::read_delim(fs::path_join(path_parts),
                              delim = "\t",
                              col_names = FALSE) %>%
