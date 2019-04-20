@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `connectivity` v0.1.0 <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
+# `connectivity` `v0.1.1` <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
 
 The goal of connectivity is to make the importing/cleaning, analyzing,
 and visualizing of NIRS data recipe based. That is, we will use a simple
@@ -78,17 +78,16 @@ This creates a nested tibble called `data` that looks like this:
 
 ``` r
 data
-#> # A tibble: 8 x 2
+#> # A tibble: 7 x 2
 #>   participant probe_data            
 #>   <chr>       <list>                
-#> 1 P01         <tibble [22,231 × 67]>
-#> 2 P02         <tibble [21,328 × 67]>
-#> 3 P03         <tibble [23,195 × 67]>
-#> 4 P04         <tibble [22,927 × 67]>
-#> 5 P05         <tibble [20,048 × 67]>
-#> 6 P06         <tibble [30,105 × 67]>
-#> 7 P07         <tibble [25,296 × 67]>
-#> 8 P16         <tibble [23,481 × 67]>
+#> 1 P01         <tibble [22,239 × 67]>
+#> 2 P03         <tibble [23,204 × 67]>
+#> 3 P04         <tibble [22,936 × 67]>
+#> 4 P05         <tibble [20,056 × 67]>
+#> 5 P06         <tibble [30,114 × 67]>
+#> 6 P07         <tibble [25,305 × 67]>
+#> 7 P16         <tibble [23,486 × 67]>
 ```
 
 The `probe_data` variable contains all the NIRS information about the
@@ -119,32 +118,32 @@ the p-value (`pvalue`).
 ``` r
 fits <- get_connectivity(rest, covariates = c("(1 | participant)"))
 fits
-#>    outcome rowname           est        pvalue
-#> 1      stg     ipl  4.376005e-03  8.145314e-30
-#> 2      stg     ifg -4.961040e-04  7.996392e-02
-#> 3      stg     sma  1.052798e-03  1.246254e-03
-#> 4      stg      m1  8.951639e-04  3.250976e-03
-#> 5      stg     lag  7.442713e-01  0.000000e+00
-#> 6      ipl     stg  7.350928e-03 7.048862e-100
-#> 7      ipl     ifg -4.874742e-04  4.933006e-02
-#> 8      ipl     sma  1.880710e-03  4.277159e-11
-#> 9      ipl      m1  2.598230e-03  1.554066e-22
-#> 10     ipl     lag  5.598306e-01  0.000000e+00
-#> 11     ifg     stg -1.018016e-03  5.702581e-05
-#> 12     ifg     ipl -2.722969e-04  2.683142e-01
-#> 13     ifg     sma  2.648069e-03  9.066254e-37
-#> 14     ifg      m1 -3.739533e-04  5.502803e-02
-#> 15     ifg     lag  4.847889e-01  0.000000e+00
-#> 16     sma     stg  7.927645e-04  9.182510e-04
-#> 17     sma     ipl  1.522572e-03  6.228829e-11
-#> 18     sma     ifg  3.941814e-03 2.702654e-117
-#> 19     sma      m1  3.202557e-03  3.724921e-68
-#> 20     sma     lag  3.501678e-01  0.000000e+00
-#> 21      m1     stg -2.438002e-04  3.987967e-01
-#> 22      m1     ipl -3.672036e-05  8.960351e-01
-#> 23      m1     ifg -7.147157e-04  5.585376e-04
-#> 24      m1     sma  2.670882e-03  5.832803e-29
-#> 25      m1     lag  3.374576e-01  0.000000e+00
+#>    outcome rowname           est       pvalue
+#> 1      stg     ipl -0.0012854233 4.098717e-02
+#> 2      stg     ifg  0.0010528857 2.175877e-01
+#> 3      stg     sma  0.0018098305 2.400770e-02
+#> 4      stg      m1 -0.0001314380 8.288871e-01
+#> 5      stg     lag  0.5951213771 0.000000e+00
+#> 6      ipl     stg  0.0068348462 5.309958e-12
+#> 7      ipl     ifg -0.0035143519 1.620990e-02
+#> 8      ipl     sma  0.0044339404 9.635422e-04
+#> 9      ipl      m1  0.0010296516 3.050960e-01
+#> 10     ipl     lag  0.5523334334 0.000000e+00
+#> 11     ifg     stg -0.0009576724 6.260133e-02
+#> 12     ifg     ipl -0.0010242724 5.790339e-02
+#> 13     ifg     sma  0.0053455916 7.133882e-14
+#> 14     ifg      m1 -0.0030414322 3.975775e-09
+#> 15     ifg     lag  0.5315290144 0.000000e+00
+#> 16     sma     stg  0.0008315454 4.110240e-02
+#> 17     sma     ipl  0.0018432310 1.563944e-05
+#> 18     sma     ifg  0.0069252798 6.357022e-27
+#> 19     sma      m1  0.0034547031 1.960396e-17
+#> 20     sma     lag  0.2008891863 0.000000e+00
+#> 21      m1     stg -0.0014515723 9.122225e-03
+#> 22      m1     ipl -0.0038264659 6.296958e-11
+#> 23      m1     ifg -0.0017079992 4.328194e-02
+#> 24      m1     sma  0.0085802104 1.031991e-27
+#> 25      m1     lag  0.2522870952 0.000000e+00
 ```
 
 In this case, this `fits` object has all the estimates from the various

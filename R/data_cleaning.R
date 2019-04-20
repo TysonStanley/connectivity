@@ -17,6 +17,8 @@ import_nirs <- function(path = "", ...){
   path <- fs::path_tidy(path)
   regions <- list(...)
   files <- files_in_path(path)
+  ## Remove any that aren't a folder
+  files <- files[!grepl("\\.xlsx|\\.csv|\\.txt", files)]
   ## Load all brodExtract files for each participant
   data_brod <- extract_brod(files, path)
 
