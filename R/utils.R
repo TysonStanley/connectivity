@@ -91,7 +91,7 @@ import_oxy_files <- function(files, path, probe, num_channels){
              skip = 40) %>%
       dplyr::rename("time_point" = `Probe2(Oxy)`) %>%
       dplyr::mutate(file = .x) %>%
-      dplyr::select(time_point:Prescan, file) %>%
+      dplyr::select(time_point:PreScan, file) %>%
       purrr::set_names(c("time_point", paste0("CH", (num_channels+1):(num_channels*2)),
                          "Mark", "Time", "BodyMovement", "RemovalMark", "PreScan", "file"))
     })
