@@ -60,7 +60,7 @@ extract_onset <- function(files, path){
 
 
 
-import_oxy_files <- function(files, path, probe){
+import_oxy_files <- function(files, path, probe, num_channels){
   if (probe == 1){
     purrr::map2(files, seq_along(files), ~{
 
@@ -89,9 +89,10 @@ import_oxy_files <- function(files, path, probe){
     file = oxy_files[grepl("Probe2", oxy_files)]
     readr::read_csv(paste0(path, "/", .x, "/", file),
              skip = 40) %>%
+      dplyr::rename("time_point" = `Probe2(Oxy)`) %>%
       dplyr::mutate(file = .x) %>%
-      dplyr::select(1:30, file) %>%
-      purrr::set_names(c("time_point", paste0("CH", 25:48),
+      dplyr::select(time_point:Prescan, file) %>%
+      purrr::set_names(c("time_point", paste0("CH", (num_channels+1):(num_channels*2)),
                          "Mark", "Time", "BodyMovement", "RemovalMark", "PreScan", "file"))
     })
   } else {

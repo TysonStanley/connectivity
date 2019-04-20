@@ -4,12 +4,14 @@
 \alias{import_nirs}
 \title{Import Data From NIRS Output}
 \usage{
-import_nirs(path = "", ...)
+import_nirs(path = "", ..., num_channels = 24)
 }
 \arguments{
 \item{path}{the path to the main folder}
 
 \item{...}{the channels (a named list of numbers)}
+
+\item{num_channels}{the number of channels for each of the probes}
 }
 \description{
 Import the various CSV files necessary to conduct connectivity analysis with some quick

@@ -5,6 +5,7 @@
 #'
 #' @param path the path to the main folder
 #' @param ... the channels (a named list of numbers)
+#' @param num_channels the number of channels for each of the probes
 #'
 #' @import fs
 #' @import purrr
@@ -12,7 +13,7 @@
 #' @importFrom zoo na.locf
 #'
 #' @export
-import_nirs <- function(path = "", ...){
+import_nirs <- function(path = "", ..., num_channels = 24){
 
   path <- fs::path_tidy(path)
   regions <- list(...)
@@ -23,15 +24,14 @@ import_nirs <- function(path = "", ...){
   data_brod <- extract_brod(files, path)
 
   ## Load all probe1 and get the averages for the ROIs
-  probe1 <- suppressWarnings(import_oxy_files(files, path, probe = 1))
-  probe2 <- suppressWarnings(import_oxy_files(files, path, probe = 2))
+  probe1 <- suppressWarnings(import_oxy_files(files, path, probe = 1, num_channels))
+  probe2 <- suppressWarnings(import_oxy_files(files, path, probe = 2, num_channels))
   probes <- purrr::map2(probe1, probe2, ~full_join(.x, .y, by = c("time_point", "file")))
   probes <- purrr::map2(probes, data_brod, ~get_region_means(.x, regions = regions, channels = .y))
   ## Add task variable
   onsets <- extract_onset(files, path)
   probes <- purrr::map2(probes, onsets, ~{
-    d = dplyr::full_join(.x, .y, by = c("time" = "start",
-                                    "file"))
+    d = dplyr::full_join(.x, .y, by = c("time" = "start", "file"))
     d$task[1] = "None"
     d %>%
       dplyr::mutate(task = zoo::na.locf(task))
