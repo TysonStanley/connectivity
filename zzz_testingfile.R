@@ -55,7 +55,7 @@ regions_side <- tibble::tibble(
 regions_top <- tibble::tibble(
   x = c(4.0, 6.0, 4.3, 5.7, 4.0, 6.0, 4.2, 5.8),
   y = c(8.7, 8.7, 8.0, 8.0, 6.7, 6.7, 5.5, 5.5),
-  region = c("ldlpfc", "rdlpfc", "lmpfc", "rmpfc", "lsma", "rmsa", "lm1", "rm1")
+  region = c("dlpfc_left", "dlpfc_right", "mpfc_left", "mpfc_right", "sma_left", "msa_right", "m1_left", "m1_right")
 )
 regions_right <- tibble::tibble(
   x = c(9.8, 7.0, 1.5, 1.0, 8.9),
