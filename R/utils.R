@@ -17,7 +17,8 @@ files_in_path <- function(path){
   files
 }
 
-extract_brod <- function(files, path){
+
+extract_brod <- function(files, path, num_channels){
   purrr::map(files, ~{
 
     file = paste0(.x, "_brodExtract.csv")
@@ -26,14 +27,18 @@ extract_brod <- function(files, path){
                     col_names = FALSE) %>%
       dplyr::mutate(file = .x)
 
-    if (NCOL(data) == 5){
+    ## Keep track of probe
+    data$probe = dplyr::case_when(as.numeric(stringr::str_remove_all(data[, 1], "CH")) <= num_channels ~ 1,
+                                  TRUE ~ 2)
+
+    if (NCOL(data) == 6){
       data %>%
-        purrr::set_names(c("channel", "number", "name", "coverage", "file")) %>%
+        purrr::set_names(c("channel", "number", "name", "coverage", "file", "probe")) %>%
         dplyr::mutate(coverage = dplyr::case_when(stringr::str_detect(coverage, "[a-zA-Z]") ~ NA_character_,
                                                   TRUE ~ coverage))
-    } else if (NCOL(data) == 6){
+    } else if (NCOL(data) == 7){
       data %>%
-        set_names(c("channel", "number", "name", "coverage", "coverage2", "file")) %>%
+        purrr::set_names(c("channel", "number", "name", "coverage", "coverage2", "file", "probe")) %>%
         dplyr::mutate(coverage = dplyr::case_when(!is.na(coverage2) ~ as.character(coverage2),
                                                   TRUE ~ coverage)) %>%
         dplyr::select(-coverage2)
@@ -100,15 +105,36 @@ import_oxy_files <- function(files, path, probe, num_channels){
   }
 }
 
-get_region_means <- function(data, regions, channels, weighted = FALSE){
+get_region_means <- function(data, regions, channels, num_channels, sides, weighted = FALSE){
 
   for (i in seq_along(regions)){
-    channel = channels %>% filter(number %in% regions[[i]])
 
-    if (all(channel$channel %in% names(data))){
-      data[, paste0(names(regions)[i])] <- rowMeans(data[, channel$channel])
+    if (sides){
+      channel_left = channels %>%
+        dplyr::filter(number %in% regions[[i]]) %>%
+        dplyr::filter(probe == 1)
+      channel_right = channels %>%
+        dplyr::filter(number %in% regions[[i]]) %>%
+        dplyr::filter(probe == 2)
+
+      if (all(channel_left$channel %in% names(data)) && all(channel_right$channel %in% names(data))){
+        data[, paste0(names(regions)[i], "_left")] <- rowMeans(data[, channel_left$channel])
+        data[, paste0(names(regions)[i], "_right")] <- rowMeans(data[, channel_right$channel])
+      } else {
+        stop(paste("Couldn't find",
+                   paste(unique(c(channel_left$channel, channel_right$channel)), collapse = ", "),
+                   "in the imported data"), call. = FALSE)
+      }
+
     } else {
-      stop(paste("Couldn't find", paste(unique(channel$channel), collapse = ", "), "in the imported data"), call. = FALSE)
+
+      channel = channels %>% dplyr::filter(number %in% regions[[i]])
+
+      if (all(channel$channel %in% names(data))){
+        data[, paste0(names(regions)[i])] <- rowMeans(data[, channel$channel])
+      } else {
+        stop(paste("Couldn't find", paste(unique(channel$channel), collapse = ", "), "in the imported data"), call. = FALSE)
+      }
     }
 
   }
