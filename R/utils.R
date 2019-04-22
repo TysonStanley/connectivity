@@ -28,12 +28,12 @@ extract_brod <- function(files, path, num_channels){
       dplyr::mutate(file = .x)
 
     if (NCOL(data) == 5){
-      data %>%
+      data <- data %>%
         purrr::set_names(c("channel", "number", "name", "coverage", "file")) %>%
         dplyr::mutate(coverage = dplyr::case_when(stringr::str_detect(coverage, "[a-zA-Z]") ~ NA_character_,
                                                   TRUE ~ coverage))
     } else if (NCOL(data) == 6){
-      data %>%
+      data <- data %>%
         purrr::set_names(c("channel", "number", "name", "coverage", "coverage2", "file")) %>%
         dplyr::mutate(coverage = dplyr::case_when(!is.na(coverage2) ~ as.character(coverage2),
                                                   TRUE ~ coverage)) %>%
