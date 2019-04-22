@@ -27,22 +27,23 @@ extract_brod <- function(files, path, num_channels){
                     col_names = FALSE) %>%
       dplyr::mutate(file = .x)
 
-    ## Keep track of probe
-    data$probe = dplyr::case_when(as.numeric(stringr::str_remove_all(data$`Ch Number`, "^CH")) <= num_channels ~ 1,
-                                  as.numeric(stringr::str_remove_all(data$`Ch Number`, "^CH"))  > num_channels ~ 2)
-
-    if (NCOL(data) == 6){
+    if (NCOL(data) == 5){
       data %>%
-        purrr::set_names(c("channel", "number", "name", "coverage", "file", "probe")) %>%
+        purrr::set_names(c("channel", "number", "name", "coverage", "file")) %>%
         dplyr::mutate(coverage = dplyr::case_when(stringr::str_detect(coverage, "[a-zA-Z]") ~ NA_character_,
                                                   TRUE ~ coverage))
-    } else if (NCOL(data) == 7){
+    } else if (NCOL(data) == 6){
       data %>%
-        purrr::set_names(c("channel", "number", "name", "coverage", "coverage2", "file", "probe")) %>%
+        purrr::set_names(c("channel", "number", "name", "coverage", "coverage2", "file")) %>%
         dplyr::mutate(coverage = dplyr::case_when(!is.na(coverage2) ~ as.character(coverage2),
                                                   TRUE ~ coverage)) %>%
         dplyr::select(-coverage2)
     }
+
+    ## Keep track of probe
+    data$probe = dplyr::case_when(as.numeric(stringr::str_remove_all(data$channel, "^CH")) <= num_channels ~ 1,
+                                  as.numeric(stringr::str_remove_all(data$channel, "^CH"))  > num_channels ~ 2)
+    data
   })
 }
 
