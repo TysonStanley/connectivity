@@ -28,8 +28,8 @@ extract_brod <- function(files, path, num_channels){
       dplyr::mutate(file = .x)
 
     ## Keep track of probe
-    data$probe = dplyr::case_when(as.numeric(stringr::str_remove_all(data[, 1], "CH")) <= num_channels ~ 1,
-                                  TRUE ~ 2)
+    data$probe = dplyr::case_when(as.numeric(stringr::str_remove_all(data$`Ch Number`, "^CH")) <= num_channels ~ 1,
+                                  as.numeric(stringr::str_remove_all(data$`Ch Number`, "^CH"))  > num_channels ~ 2)
 
     if (NCOL(data) == 6){
       data %>%
