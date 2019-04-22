@@ -52,7 +52,13 @@ import_nirs <- function(path = "", ..., num_channels = 24, sides = FALSE){
   message(msg)
 
   ## Add regions as an attribute
-  attr(df, "regions") <- names(regions)
+  if (sides){
+    all_sides <- expand.grid(names(regions), c("_left", "_right"), stringsAsFactors = FALSE)
+    attr(df, "regions") <- paste0(all_sides[[1]], all_sides[[2]])
+  } else {
+    attr(df, "regions") <- names(regions)
+  }
+
   df
 }
 
