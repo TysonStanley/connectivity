@@ -241,7 +241,7 @@ brain_viz(fits, regs = regs)
 
 In addition to this side diagram (`view = "side"`), the other built-in
 images include a top view (`view = "top"`), an angled left side (`view =
-"left"`), and an angled right side (`view = "right"`).
+"left"`), and an angled right side (`view = "right"`). \[1\]
 
 <img src="man/figures/README-unnamed-chunk-11-1.png" width="60%" />
 
@@ -256,3 +256,6 @@ specific set of data. If your data do not follow the general outline
 shown above, then this package will likely throw errors. It is still in
 heavy development. Contact <t.barrett@aggiemail.usu.edu> for questions
 or comments.
+
+1.  Note that the `view = "top"` has functionality that allows each
+    probe to be different sides of the brain.

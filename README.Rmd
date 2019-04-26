@@ -190,9 +190,9 @@ regs <- tibble::tribble(
 brain_viz(fits, regs = regs)
 ```
 
-In addition to this side diagram (`view = "side"`), the other built-in images include a top view (`view = "top"`), an angled left side (`view = "left"`), and an angled right side (`view = "right"`).
+In addition to this side diagram (`view = "side"`), the other built-in images include a top view (`view = "top"`), an angled left side (`view = "left"`), and an angled right side (`view = "right"`). ^[Note that the `view = "top"` has functionality that allows each probe to be different sides of the brain.]
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width=4, fig.height=4}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width=6, fig.height=6}
 d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",
                   dlpfc_left = 22, dlpfc_right = 39, 
                   mpfc_left = 44, mpfc_right = 6, 
