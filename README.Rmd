@@ -73,17 +73,17 @@ twee("~/Box/Stuttering Writing Group/PhoneCallsStutter/", level = 2)
 ```
 ```
 -- P07
-   |__ons.txt
+   |__onset.txt
    |__P07_brodExtract.csv
    |__P07_HBA_Probe1_Oxy.csv
    |__P07_HBA_Probe2_Oxy.csv
 -- P08
-   |__ons.txt
+   |__onset.txt
    |__P08_brodExtract.csv
    |__P08_HBA_Probe1_Oxy.csv
    |__P08_HBA_Probe2_Oxy.csv
 -- P09
-   |__ons.txt
+   |__onset.txt
    |__P09_brodExtract.csv
    |__P09_HBA_Probe1_Oxy.csv
    |__...
@@ -192,9 +192,11 @@ brain_viz(fits, regs = regs)
 
 In addition to this side diagram (`view = "side"`), the other built-in images include a top view (`view = "top"`), an angled left side (`view = "left"`), and an angled right side (`view = "right"`).
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width=4, fig.height=5}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, fig.width=4, fig.height=4}
 d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",
-                  ldlpfc = 22, rdlpfc = 39, lmpfc = 44, rmpfc = 6, lsma = 40, rsma = 45)
+                  dlpfc_left = 22, dlpfc_right = 39, 
+                  mpfc_left = 44, mpfc_right = 6, 
+                  sma_left = 40, sma_right = 45)
 stutter <- get_connectivity(d1, covariates = c("(1 | participant)"))
 brain_viz(stutter, view = "top", jitter_val = .05)
 ```

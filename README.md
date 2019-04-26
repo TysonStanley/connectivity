@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `connectivity` `v0.1.1` <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
+# `connectivity` `v0.1.2` <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
 
 The goal of connectivity is to make the importing/cleaning, analyzing,
 and visualizing of NIRS data recipe based. That is, we will use a simple
@@ -31,17 +31,17 @@ The `import_nirs()` function depends on a files structure that looks
 something like:
 
     -- P07
-       |__ons.txt
+       |__onset.txt
        |__P07_brodExtract.csv
        |__P07_HBA_Probe1_Oxy.csv
        |__P07_HBA_Probe2_Oxy.csv
     -- P08
-       |__ons.txt
+       |__onset.txt
        |__P08_brodExtract.csv
        |__P08_HBA_Probe1_Oxy.csv
        |__P08_HBA_Probe2_Oxy.csv
     -- P09
-       |__ons.txt
+       |__onset.txt
        |__P09_brodExtract.csv
        |__P09_HBA_Probe1_Oxy.csv
        |__...
