@@ -85,7 +85,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                   sig, x_padding, y_padding) %>%
     dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
 
-  if (!is.null(colors)){
+  if (is.null(colors)){
     fig_data$colored <- fig_data$outcome
   } else {
     fig_data <- inner_join(fig_data, colors)
