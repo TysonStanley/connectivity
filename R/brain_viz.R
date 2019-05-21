@@ -8,13 +8,14 @@
 #' @param image If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here
 #' @param regs Alternate locations for the regions of interest (needs to have x, y, and region as the variables)
 #' @param diff For comparison brain viz's, this is the difference between the largest effect size of one to the other (current sample - comparison sample). Adjusts the size of the arrows to be more comparable across samples.
+#' @param colors If NULL, then colored based on outcome region. Otherwise can define based on the `get_connectivity()` object.
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @importFrom png readPNG
 #'
 #' @export
-brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL, diff = 0){
+brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL, diff = 0, colors = NULL){
 
   if (is.null(regs)){
 
@@ -82,7 +83,9 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ## Get rid of intermediate variables
     dplyr::select(outcome, rowname, est, pvalue, x, y, xend, yend, x_perp, y_perp, xend_perp, yend_perp,
                   sig, x_padding, y_padding) %>%
-    dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
+    dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$")) %>%
+    dplyr::mutate(colored = case_when(is.null(colors) ~ outcome,
+                                      TRUE ~ colors))
 
   if (all(fig_data$sig == 1)){
     alphas <- .95
@@ -109,7 +112,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                                      y = yend_perp + y_padding,
                                      alpha = sig,
                                      size = abs(est),
-                                     color = outcome),
+                                     color = colored),
                         arrow = ggplot2::arrow(length = ggplot2::unit(0.02, "npc")),
                         curvature = 0) +
     ggplot2::coord_cartesian(xlim = c(0,10),
@@ -121,23 +124,22 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
 
 }
 
-#' Calculate Ratio for Brain Viz
+#' Calculate Difference of Effect Sizes for Brain Viz
 #'
 #' @param obj1 from `get_connectivity()`
 #' @param obj2 from `get_connectivity()`
+#' @param pattern the regular expression to grab the variables not to be included (e.g., the lag or time variables)
 #'
 #' @import stringr
 #' @import dplyr
 #'
 #' @export
-calc_ratio <- function(obj1, obj2){
+calc_diff <- function(obj1, obj2, pattern = "lag|time"){
 
-  obj1 <- obj1 %>%
-    dplyr::filter(!stringr::str_detect(rowname, "lag"))
-  obj2 <- obj2 %>%
-    dplyr::filter(!stringr::str_detect(rowname, "lag"))
+  obj1 <- filter(obj1, !stringr::str_detect(rowname, pattern) %>% pull(est))
+  obj2 <- filter(obj2, !stringr::str_detect(rowname, pattern) %>% pull(est))
 
-  max(obj1$est) / max(obj2$est)
+  (max(obj1) - max(obj1)) / mean(c(max(obj1), max(obj2)))
 
 }
 
