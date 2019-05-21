@@ -120,6 +120,25 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
 
 }
 
+#' Calculate Ratio for Brain Viz
+#'
+#' @param obj1 from `get_connectivity()`
+#' @param obj2 from `get_connectivity()`
+#'
+#' @import ggplot2
+#' @import dplyr
+#'
+#' @export
+calc_ratio <- function(obj1, obj2){
+
+  obj1 <- obj1 %>%
+    dplyr::filter(!stringr::str_detect(est, "lag"))
+  obj2 <- obj2 %>%
+    dplyr::filter(!stringr::str_detect(est, "lag"))
+
+  max(obj1$est) / max(obj2$est)
+
+}
 
 
 
