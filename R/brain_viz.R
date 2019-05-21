@@ -7,7 +7,7 @@
 #' @param view the view of the brain diagram (available options are "side", "top", "right", "left"). If the image argument is given a path, then that image will be used instead of the built-in ones.
 #' @param image If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here
 #' @param regs Alternate locations for the regions of interest (needs to have x, y, and region as the variables)
-#' @param ratio For comparison brain viz's, this is the ratio of the largest effect size of one to the other (current sample / comparison sample).
+#' @param ratio For comparison brain viz's, this is the ratio of the largest effect size of one to the other (current sample / comparison sample). Adjusts the size of the arrows to be more comparable across samples.
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -81,7 +81,8 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     dplyr::ungroup() %>%
     ## Get rid of intermediate variables
     dplyr::select(outcome, rowname, est, pvalue, x, y, xend, yend, x_perp, y_perp, xend_perp, yend_perp,
-                  sig, x_padding, y_padding)
+                  sig, x_padding, y_padding) %>%
+    dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
 
   if (all(fig_data$sig == 1)){
     alphas <- .95
@@ -92,7 +93,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
   }
 
   ## standardize the size of arrows based on ratio of effect sizes across groups (if applicable)
-  ratio <- 3*ratio
+  ratio <- 4*ratio
 
   ggplot2::ggplot(fig_data, ggplot2::aes(x, y)) +
     ggplot2::annotation_custom(grid::rasterGrob(brain,
@@ -116,7 +117,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ggplot2::theme_void() +
     ggplot2::scale_alpha_manual(values = alphas) +
     ggplot2::theme(legend.position = "none") +
-    ggplot2::scale_size(range = c(0.3, ratio))
+    ggplot2::scale_size(range = c(0.2, ratio))
 
 }
 
@@ -125,16 +126,16 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
 #' @param obj1 from `get_connectivity()`
 #' @param obj2 from `get_connectivity()`
 #'
-#' @import ggplot2
+#' @import stringr
 #' @import dplyr
 #'
 #' @export
 calc_ratio <- function(obj1, obj2){
 
   obj1 <- obj1 %>%
-    dplyr::filter(!stringr::str_detect(est, "lag"))
+    dplyr::filter(!stringr::str_detect(rowname, "lag"))
   obj2 <- obj2 %>%
-    dplyr::filter(!stringr::str_detect(est, "lag"))
+    dplyr::filter(!stringr::str_detect(rowname, "lag"))
 
   max(obj1$est) / max(obj2$est)
 
