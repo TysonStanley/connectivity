@@ -83,9 +83,13 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ## Get rid of intermediate variables
     dplyr::select(outcome, rowname, est, pvalue, x, y, xend, yend, x_perp, y_perp, xend_perp, yend_perp,
                   sig, x_padding, y_padding) %>%
-    dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$")) %>%
-    dplyr::mutate(colored = case_when(is.null(colors) ~ outcome,
-                                      TRUE ~ colors))
+    dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
+
+  if (!is.null(colors)){
+    fig_data$colored <- fig_data$outcome
+  } else {
+    fig_data <- inner_join(fig_data, colors)
+  }
 
   if (all(fig_data$sig == 1)){
     alphas <- .95
