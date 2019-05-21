@@ -5,7 +5,7 @@
 \title{Brain Visual}
 \usage{
 brain_viz(obj, jitter_val = 0.04, view = "side", image = NULL,
-  regs = NULL)
+  regs = NULL, ratio = 1)
 }
 \arguments{
 \item{obj}{from `get_connectivity()`}
@@ -17,6 +17,8 @@ brain_viz(obj, jitter_val = 0.04, view = "side", image = NULL,
 \item{image}{If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here}
 
 \item{regs}{Alternate locations for the regions of interest (needs to have x, y, and region as the variables)}
+
+\item{ratio}{For comparison brain viz's, this is the ratio of the largest effect size of one to the other (current sample / comparison sample).}
 }
 \description{
 Provides a `ggplot2` figure of the connections of regions of the brain.

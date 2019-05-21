@@ -77,7 +77,8 @@ usethis::use_data(regions_left, overwrite = TRUE)
 d1 <- import_nirs("~/Box/Stuttering Writing Group/PhoneCallsStutter/",
                   ldlpfc = 22, rdlpfc = c(39, 40), mpfc = c(44, 45), smg = 6, ang = 4)
 stutter <- get_connectivity(d1, covariates = c("(1 | participant)"))
-brain_viz(stutter, view = "right", regs = regions_right, jitter_val = .05) + labs(title = "Stutter")
+devtools::document()
+brain_viz(stutter, jitter_val = .05) + labs(title = "Stutter")
 brain_viz(control) + labs(title = "Control")
 
 

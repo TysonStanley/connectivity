@@ -15,6 +15,7 @@ knitr::opts_chunk$set(
 devtools::load_all("~/Dropbox/GitHub/Connectivity")
 ```
 
+
 # `connectivity` `v`r packageVersion("connectivity")`` <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
 
 The goal of connectivity is to make the importing/cleaning, analyzing, and visualizing of NIRS data recipe based. That is, we will use a simple recipe to take our individual NIRS files and make clear, concise analyses with interpretable output. Our approach uses a Granger-Causality-type approach using linear mixed effects models.
