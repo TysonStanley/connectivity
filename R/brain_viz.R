@@ -7,14 +7,14 @@
 #' @param view the view of the brain diagram (available options are "side", "top", "right", "left"). If the image argument is given a path, then that image will be used instead of the built-in ones.
 #' @param image If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here
 #' @param regs Alternate locations for the regions of interest (needs to have x, y, and region as the variables)
-#' @param ratio For comparison brain viz's, this is the ratio of the largest effect size of one to the other (current sample / comparison sample). Adjusts the size of the arrows to be more comparable across samples.
+#' @param diff For comparison brain viz's, this is the difference between the largest effect size of one to the other (current sample - comparison sample). Adjusts the size of the arrows to be more comparable across samples.
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @importFrom png readPNG
 #'
 #' @export
-brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL, ratio = 1){
+brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL, diff = 0){
 
   if (is.null(regs)){
 
@@ -92,8 +92,8 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     alphas <- c(.2, .95)
   }
 
-  ## standardize the size of arrows based on ratio of effect sizes across groups (if applicable)
-  ratio <- 4*ratio
+  ## adjusts the size of arrows based on difference of effect sizes across groups (if applicable)
+  diff <- 3 + diff
 
   ggplot2::ggplot(fig_data, ggplot2::aes(x, y)) +
     ggplot2::annotation_custom(grid::rasterGrob(brain,
@@ -117,7 +117,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ggplot2::theme_void() +
     ggplot2::scale_alpha_manual(values = alphas) +
     ggplot2::theme(legend.position = "none") +
-    ggplot2::scale_size(range = c(0.2, ratio))
+    ggplot2::scale_size(range = c(0.2, diff))
 
 }
 
