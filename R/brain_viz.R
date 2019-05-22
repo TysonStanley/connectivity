@@ -82,13 +82,16 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     dplyr::ungroup() %>%
     ## Get rid of intermediate variables
     dplyr::select(outcome, rowname, est, pvalue, x, y, xend, yend, x_perp, y_perp, xend_perp, yend_perp,
-                  sig, x_padding, y_padding) %>%
-    dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
+                  sig, x_padding, y_padding)
 
   if (is.null(colors)){
-    fig_data$colored <- fig_data$outcome
+    fig_data <- fig_data %>%
+      mutate(colored = outcome) %>%
+      dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
   } else {
-    fig_data <- inner_join(fig_data, colors)
+    fig_data <- fig_data %>%
+      inner_join(colors) %>%
+      dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
   }
 
   if (all(fig_data$sig == 1)){
@@ -102,14 +105,15 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
   ## adjusts the size of arrows based on difference of effect sizes across groups (if applicable)
   diff <- 3 + diff
 
-  ggplot2::ggplot(fig_data, ggplot2::aes(x, y)) +
+  ## Brain Viz
+  p <- ggplot2::ggplot(fig_data, ggplot2::aes(x, y)) +
     ggplot2::annotation_custom(grid::rasterGrob(brain,
                                                 width = ggplot2::unit(1,"npc"),
-                                                height = ggplot2::unit(1,"npc"))) +
-    ggplot2::geom_point(size = 15, shape = 21, fill = "white",
-                        ggplot2::aes(color = outcome)) +
-    ggplot2::geom_text(ggplot2::aes(label = toupper(outcome),
-                                    color = outcome)) +
+                                                height = ggplot2::unit(1,"npc")))
+  ## Add circles and text based on colors object (if colors != NULL, then black for both, otherwise color by outcome)
+  if (!is.null(colors)) p <- p + ggplot2::geom_point(size = 15, shape = 21, fill = "white", color = "black") + ggplot2::geom_text(ggplot2::aes(label = toupper(outcome)), color = "black")
+  if (is.null(colors)) p <- p + ggplot2::geom_point(size = 15, shape = 21, fill = "white", ggplot2::aes(color = colored)) + ggplot2::geom_text(ggplot2::aes(label = toupper(outcome), color = colored))
+  p +
     ggplot2::geom_curve(ggplot2::aes(xend = x_perp - x_padding,
                                      yend = y_perp - y_padding,
                                      x = xend_perp + x_padding,
@@ -123,7 +127,6 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                              ylim = c(0,10)) +
     ggplot2::theme_void() +
     ggplot2::scale_alpha_manual(values = alphas) +
-    ggplot2::theme(legend.position = "none") +
     ggplot2::scale_size(range = c(0.2, diff))
 
 }
