@@ -166,14 +166,29 @@ The brain visuals are the most flexible visualization. At its simplest, it shows
 brain_viz(fits)
 ```
 
-To control the colors of the circles and lines, use any of the ggplot2 scale_color_* functions:
+To control the colors of the circles and lines, use any of the ggplot2 `scale_color_*` functions and remove unnecessary legends with `theme()`:
 
 ```{r}
 brain_viz(fits) +
-  scale_color_viridis_d()
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
 ```
 
-For this brain viz, there is a built-in list of regions with corresponding `x` and `y` values that fit this diagram.
+You can also color the lines based on other information. For example, we may want to color the lines based on whether it is bigger than some specified effect size. To do this, we will create a data frame from the `fits` object from `get_connectivity()` function.
+
+```{r}
+coloring <- fits %>% 
+  mutate(coloring = case_when(est > .001 ~ 1,
+                              est <= .001 ~ 0) %>% factor())
+
+brain_viz(fits, colors = coloring) +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+```
+
+
+
+For these brain visuals, there is a built-in list of regions with corresponding `x` and `y` values that fit this diagram.
 
 ```{r}
 connectivity::regions_side

@@ -8,7 +8,7 @@
 #' @param image If NULL then the default images (based on `view`); otherwise the path to the figure should be supplied here
 #' @param regs Alternate locations for the regions of interest (needs to have x, y, and region as the variables)
 #' @param diff For comparison brain viz's, this is the difference between the largest effect size of one to the other (current sample - comparison sample). Adjusts the size of the arrows to be more comparable across samples.
-#' @param colors If NULL, then colored based on outcome region. Otherwise can define based on the `get_connectivity()` object.
+#' @param colors If NULL, then it colored based on outcome region. Otherwise can define based on the `get_connectivity()` object.
 #'
 #' @import ggplot2
 #' @import dplyr
@@ -86,11 +86,11 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
 
   if (is.null(colors)){
     fig_data <- fig_data %>%
-      mutate(colored = outcome) %>%
+      dplyr::mutate(coloring = outcome) %>%
       dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
   } else {
     fig_data <- fig_data %>%
-      inner_join(colors) %>%
+      dplyr::inner_join(colors) %>%
       dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
   }
 
@@ -112,7 +112,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                                                 height = ggplot2::unit(1,"npc")))
   ## Add circles and text based on colors object (if colors != NULL, then black for both, otherwise color by outcome)
   if (!is.null(colors)) p <- p + ggplot2::geom_point(size = 15, shape = 21, fill = "white", color = "black") + ggplot2::geom_text(ggplot2::aes(label = toupper(outcome)), color = "black")
-  if (is.null(colors)) p <- p + ggplot2::geom_point(size = 15, shape = 21, fill = "white", ggplot2::aes(color = colored)) + ggplot2::geom_text(ggplot2::aes(label = toupper(outcome), color = colored))
+  if (is.null(colors)) p <- p + ggplot2::geom_point(size = 15, shape = 21, fill = "white", ggplot2::aes(color = coloring)) + ggplot2::geom_text(ggplot2::aes(label = toupper(outcome), color = coloring))
   p +
     ggplot2::geom_curve(ggplot2::aes(xend = x_perp - x_padding,
                                      yend = y_perp - y_padding,
@@ -120,7 +120,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                                      y = yend_perp + y_padding,
                                      alpha = sig,
                                      size = abs(est),
-                                     color = colored),
+                                     color = coloring),
                         arrow = ggplot2::arrow(length = ggplot2::unit(0.02, "npc")),
                         curvature = 0) +
     ggplot2::coord_cartesian(xlim = c(0,10),

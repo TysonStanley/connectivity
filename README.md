@@ -190,16 +190,35 @@ brain_viz(fits)
 <img src="man/figures/README-unnamed-chunk-7-1.png" width="60%" />
 
 To control the colors of the circles and lines, use any of the ggplot2
-scale\_color\_\* functions:
+`scale_color_*` functions and remove unnecessary legends with `theme()`:
 
 ``` r
 brain_viz(fits) +
-  scale_color_viridis_d()
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="60%" />
 
-For this brain viz, there is a built-in list of regions with
+You can also color the lines based on other information. For example, we
+may want to color the lines based on whether it is bigger than some
+specified effect size. To do this, we will create a data frame from the
+`fits` object from `get_connectivity()` function.
+
+``` r
+coloring <- fits %>% 
+  mutate(coloring = case_when(est > .001 ~ 1,
+                              est <= .001 ~ 0) %>% factor())
+
+brain_viz(fits, colors = coloring) +
+  scale_color_viridis_d() +
+  theme(legend.position = "none")
+#> Joining, by = c("outcome", "rowname", "est", "pvalue")
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="60%" />
+
+For these brain visuals, there is a built-in list of regions with
 corresponding `x` and `y` values that fit this diagram.
 
 ``` r
@@ -237,17 +256,17 @@ regs <- tibble::tribble(
 brain_viz(fits, regs = regs)
 ```
 
-<img src="man/figures/README-unnamed-chunk-10-1.png" width="60%" />
+<img src="man/figures/README-unnamed-chunk-11-1.png" width="60%" />
 
 In addition to this side diagram (`view = "side"`), the other built-in
 images include a top view (`view = "top"`), an angled left side (`view =
 "left"`), and an angled right side (`view = "right"`). \[1\]
 
-<img src="man/figures/README-unnamed-chunk-11-1.png" width="60%" />
-
 <img src="man/figures/README-unnamed-chunk-12-1.png" width="60%" />
 
 <img src="man/figures/README-unnamed-chunk-13-1.png" width="60%" />
+
+<img src="man/figures/README-unnamed-chunk-14-1.png" width="60%" />
 
 ## Conclusion
 
