@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# `connectivity` `v0.1.3` <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
+# `connectivity` `v0.1.4` <img src="inst/connectivity_hex.png" align="right" width="30%" height="30%"/>
 
 The goal of connectivity is to make the importing/cleaning, analyzing,
 and visualizing of NIRS data recipe based. That is, we will use a simple

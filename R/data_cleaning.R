@@ -7,6 +7,7 @@
 #' @param ... the channels (a named list of numbers)
 #' @param num_channels the number of channels for each of the probes
 #' @param sides should the channel means be split into sides (based on the probe)
+#' @param ignore_folders folders to ignore in the directory in regular expression form, e.g. "first|random" would remove any folders that have "first" or "random" in their names
 #'
 #' @import fs
 #' @import purrr
@@ -14,13 +15,15 @@
 #' @importFrom zoo na.locf
 #'
 #' @export
-import_nirs <- function(path = "", ..., num_channels = 24, sides = FALSE){
+import_nirs <- function(path = "", ..., num_channels = 24, sides = FALSE, ignore_folders = NULL){
 
   path <- fs::path_tidy(path)
   regions <- list(...)
   files <- files_in_path(path)
   ## Remove any that aren't a folder
   files <- files[!grepl("\\.xlsx|\\.csv|\\.txt", files)]
+  if (!is.null(ignore_folders))
+    files <- files[!grepl(ignore_folders, files)]
   ## Load all brodExtract files for each participant
   data_brod <- extract_brod(files, path, num_channels)
 
