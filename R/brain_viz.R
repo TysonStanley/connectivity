@@ -90,17 +90,26 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
       dplyr::mutate(coloring = outcome) %>%
       dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
   } else {
-    fig_data <- fig_data %>%
-      dplyr::inner_join(colors) %>%
-      dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
+    ## If `est` in colors use that one
+    nams <- names(colors)
+    if (isTRUE("est" %in% nams)){
+      fig_data <- fig_data %>%
+        select(-est) %>%
+        dplyr::inner_join(colors) %>%
+        dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
+    } else {
+      fig_data <- fig_data %>%
+        dplyr::inner_join(colors) %>%
+        dplyr::mutate(outcome = stringr::str_remove_all(outcome, "_right$|_left$"))
+    }
   }
 
   if (all(fig_data$sig == 1)){
     alphas <- .95
   } else if (all(fig_data$sig == 0)){
-    alphas <- .2
+    alphas <- .1
   } else {
-    alphas <- c(.2, .95)
+    alphas <- c(.1, .95)
   }
 
   ## adjusts the size of arrows based on difference of effect sizes across groups (if applicable)
