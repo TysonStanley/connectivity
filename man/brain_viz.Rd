@@ -5,7 +5,7 @@
 \title{Brain Visual}
 \usage{
 brain_viz(obj, jitter_val = 0.04, view = "side", image = NULL,
-  regs = NULL, diff = 0, colors = NULL)
+  regs = NULL, diff = 0, colors = NULL, alpha = 0.001)
 }
 \arguments{
 \item{obj}{from `get_connectivity()`}
@@ -20,7 +20,9 @@ brain_viz(obj, jitter_val = 0.04, view = "side", image = NULL,
 
 \item{diff}{For comparison brain viz's, this is the difference between the largest effect size of one to the other (current sample - comparison sample). Adjusts the size of the arrows to be more comparable across samples.}
 
-\item{colors}{If NULL, then colored based on outcome region. Otherwise can define based on the `get_connectivity()` object.}
+\item{colors}{If NULL, then it colored based on outcome region. Otherwise can define based on the `get_connectivity()` object.}
+
+\item{alpha}{the alpha level for significance}
 }
 \description{
 Provides a `ggplot2` figure of the connections of regions of the brain.

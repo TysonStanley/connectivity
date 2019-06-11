@@ -9,13 +9,14 @@
 #' @param regs Alternate locations for the regions of interest (needs to have x, y, and region as the variables)
 #' @param diff For comparison brain viz's, this is the difference between the largest effect size of one to the other (current sample - comparison sample). Adjusts the size of the arrows to be more comparable across samples.
 #' @param colors If NULL, then it colored based on outcome region. Otherwise can define based on the `get_connectivity()` object.
+#' @param alpha the alpha level for significance
 #'
 #' @import ggplot2
 #' @import dplyr
 #' @importFrom png readPNG
 #'
 #' @export
-brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL, diff = 0, colors = NULL){
+brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs = NULL, diff = 0, colors = NULL, alpha = .001){
 
   if (is.null(regs)){
 
@@ -51,8 +52,8 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                   xend = x.y,
                   yend = y.y) %>%
     dplyr::filter(rowname != "lag") %>%
-    dplyr::mutate(sig = dplyr::case_when(pvalue <= .05 ~ 1,
-                                         pvalue > .05 ~ 0)) %>%
+    dplyr::mutate(sig = dplyr::case_when(pvalue <= alpha ~ 1,
+                                         pvalue > alpha ~ 0)) %>%
     dplyr::mutate(sig = factor(sig, levels = c(0,1))) %>%
     dplyr::mutate(x_padding = x - xend,
                   y_padding = y - yend,
@@ -130,6 +131,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ggplot2::scale_size(range = c(0.2, diff))
 
 }
+
 
 #' Calculate Difference of Effect Sizes for Brain Viz
 #'
