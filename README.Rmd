@@ -91,6 +91,7 @@ twee("~/Box/Stuttering Writing Group/PhoneCallsStutter/", level = 2)
    |__...
 ```   
 
+
 where each participant has its own folder with the data within that folder. Other files can be within the individual folders, but the ones shown are required.
 
 In our data (not currently provided), we have 5 regions that we are interested in that are mapped out in the `*brod.csv` files. To inform on what region goes with which channel from the Probe files, we use the import function like so:
