@@ -139,7 +139,7 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
     ggplot2::theme_void() +
     ggplot2::scale_alpha_manual(values = alphas) +
     ggplot2::scale_size(range = c(0.2, diff)) +
-    ggplot2::scale_linetype_manual(values = c("solid", "dashed"))
+    ggplot2::scale_linetype_manual(values = c("dashed", "solid"))
 
 }
 
