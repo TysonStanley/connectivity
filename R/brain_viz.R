@@ -130,14 +130,16 @@ brain_viz <- function(obj, jitter_val = .04, view = "side", image = NULL, regs =
                                      y = yend_perp + y_padding,
                                      alpha = sig,
                                      size = abs(est),
-                                     color = coloring),
+                                     color = coloring,
+                                     linetype = factor(ifelse(est >= 0, 1, 0))),
                         arrow = ggplot2::arrow(length = ggplot2::unit(0.02, "npc")),
                         curvature = 0) +
     ggplot2::coord_cartesian(xlim = c(0,10),
                              ylim = c(0,10)) +
     ggplot2::theme_void() +
     ggplot2::scale_alpha_manual(values = alphas) +
-    ggplot2::scale_size(range = c(0.2, diff))
+    ggplot2::scale_size(range = c(0.2, diff)) +
+    ggplot2::scale_linetype_manual(values = c("solid", "dashed"))
 
 }
 
