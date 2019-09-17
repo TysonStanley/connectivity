@@ -1,6 +1,6 @@
 Package: connectivity
 Title: Tools to Assess Brain Connectivity
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: person("Tyson", "Barrett", email = "t.barrett@aggiemail.usu.edu", role = c("aut", "cre"))
 Description: Provides tools to assess the degree of connectivity between brain regions using
   a multilevel form of granger analysis.

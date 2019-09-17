@@ -16,7 +16,7 @@ import_nirs(path = "", ..., num_channels = 24, sides = FALSE,
 
 \item{sides}{should the channel means be split into sides (based on the probe)}
 
-\item{ignore_folders}{folders to ignore in the directory in regular expression form, e.g. "first|random" would remove any folders that have "first" or "random" in their names}
+\item{ignore_folders}{folders to ignore in the directory}
 }
 \description{
 Import the various CSV files necessary to conduct connectivity analysis with some quick
