@@ -4,8 +4,13 @@
 \alias{import_nirs}
 \title{Import Data From NIRS Output}
 \usage{
-import_nirs(path = "", ..., num_channels = 24, sides = FALSE,
-  ignore_folders = NULL)
+import_nirs(
+  path = "",
+  ...,
+  num_channels = 24,
+  sides = FALSE,
+  ignore_folders = NULL
+)
 }
 \arguments{
 \item{path}{the path to the main folder}

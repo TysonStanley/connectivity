@@ -4,8 +4,16 @@
 \alias{brain_viz}
 \title{Brain Visual}
 \usage{
-brain_viz(obj, jitter_val = 0.04, view = "side", image = NULL,
-  regs = NULL, diff = 0, colors = NULL, alpha = 0.001)
+brain_viz(
+  obj,
+  jitter_val = 0.04,
+  view = "side",
+  image = NULL,
+  regs = NULL,
+  diff = 0,
+  colors = NULL,
+  alpha = 0.001
+)
 }
 \arguments{
 \item{obj}{from `get_connectivity()`}

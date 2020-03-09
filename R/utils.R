@@ -156,7 +156,7 @@ all_formulas <- function(data, group, covariates){
                        paste(regions[!grepl(regions[i], regions)], collapse = " + "))
     cov <- ifelse(!is.null(covariates), paste(" + ", paste(covariates, collapse = " + ")), "")
 
-    form[[i]] <- paste(regions[[i]], "~", main_int, "+ lag(", regions[i], ", 1)", cov) %>%
+    form[[i]] <- paste(regions[[i]], "~ lag(", main_int, ", 1) + lag(", regions[i], ", 1)", cov) %>%
       formula()
 
   }
