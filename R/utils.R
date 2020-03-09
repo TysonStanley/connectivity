@@ -152,11 +152,11 @@ all_formulas <- function(data, group, covariates){
   for (i in seq_along(regions)){
 
     main_int <- ifelse(!is.null(group),
-                       paste(regions[!grepl(regions[i], regions)], group, collapse = " + "),
-                       paste(regions[!grepl(regions[i], regions)], collapse = " + "))
+                       paste0("lag(", regions[!grepl(regions[i], regions)], ", 1)", group, collapse = " + "),
+                       paste0("lag(", regions[!grepl(regions[i], regions)], ", 1)", collapse = " + "))
     cov <- ifelse(!is.null(covariates), paste(" + ", paste(covariates, collapse = " + ")), "")
 
-    form[[i]] <- paste(regions[[i]], "~ lag(", main_int, ", 1) + lag(", regions[i], ", 1)", cov) %>%
+    form[[i]] <- paste(regions[[i]], "~", main_int, " + lag(", regions[i], ", 1)", cov) %>%
       formula()
 
   }

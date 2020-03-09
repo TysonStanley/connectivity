@@ -22,7 +22,7 @@ get_connectivity <- function(data, group = NULL, covariates = NULL, ...){
   forms <- all_formulas(data, group, covariates)
 
   d <- data %>%
-    tidyr::unnest(.)
+    tidyr::unnest(., cols = probe_data)
 
   mods <- purrr::map(seq_along(regions), ~lme4::lmer(forms[[.x]], data = d))
   summ <- purrr::map(mods, ~jtools::summ(.x, scale = TRUE, digits = 4))
@@ -34,7 +34,8 @@ get_connectivity <- function(data, group = NULL, covariates = NULL, ...){
       mutate(outcome = outcomes[[.x]]) %>%
       select(outcome, rowname, `Est.`, p) %>%
       setNames(c("outcome", "rowname", "est", "pvalue")) %>%
-      mutate(rowname = case_when(stringr::str_detect(rowname, pattern = "lag") ~ "lag",
+      mutate(rowname = gsub(", 1)`", "", gsub("`lag(", "", rowname, fixed=TRUE), fixed=TRUE)) %>%
+      mutate(rowname = case_when(rowname == outcome ~ "lag",
                                  TRUE ~ rowname)) %>%
       filter(rowname != "(Intercept)")
     })
